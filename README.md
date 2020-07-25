@@ -1,165 +1,182 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web APIs & NLP
+# Project 3: Web APIs & NLP
+#### Project completed by Matt Williams
+#### July 24th, 2020
 
-### Description
+### Problem Statement:
 
-In week four we've learned about a few different classifiers. In week five we'll learn about webscraping, APIs, and Natural Language Processing (NLP). This project will put those skills to the test.
-
-For project 3, your goal is two-fold:
-1. Using [Pushshift's](https://github.com/pushshift/api) API, you'll collect posts from two subreddits of your choosing.
-2. You'll then use NLP to train a classifier on which subreddit a given post came from. This is a binary classification problem.
-
-
-#### About the API
-
-Pushshift's API is fairly straightforward. For example, if I want the posts from [`/r/boardgames`](https://www.reddit.com/r/boardgames), all I have to do is use the following url: https://api.pushshift.io/reddit/search/submission?subreddit=boardgames
-
-To help you get started, we have a primer video on how to use the API: https://youtu.be/AcrjEWsMi_E
+I will be exploring how to create classification models using text data and Natural Language Processing (NLP). I have collected text data on posts from two different Subreddits - [r/AskMen](https://www.reddit.com/r/AskMen/) and [r/AskWomen](https://www.reddit.com/r/AskWomen/). I will use different techniques to prepare the data for modeling, and explore how several classification models peform in an effort to predict from which Subreddit a given post came.
 
 ---
 
-### Requirements
-
-- Gather and prepare your data using the `requests` library.
-- **Create and compare two models**. One of these must be a Random Forest classifier, however the other can be a classifier of your choosing: logistic regression, KNN, SVM, etc.
-- A Jupyter Notebook with your analysis for a peer audience of data scientists.
-- An executive summary of your results.
-- A short presentation outlining your process and findings for a semi-technical audience.
-
-**Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+### Contents:
+- [Data Sources & Dictionary](#Data_Sources)
+- [Data Cleaning](#Data_Cleaning)
+- [Exploratory Data Analysis](#Exploratory_Data_Analysis)
+- [Modeling](#Modeling)
+- [Presentation](#Presentation)
+- [Conclusions and Recommendations](#Conclusions_and_Recommendations)
 
 ---
 
-### Necessary Deliverables / Submission
+### Data Sources & Dictionary
 
-- Code and executive summary must be in a clearly commented Jupyter Notebook.
-- You must submit your slide deck.
-- Materials must be submitted by **10:00 AM on Friday, July 24th**.
+I collected the data using the Python Reddit API Wrapper ([PRAW](https://praw.readthedocs.io/en/latest/)). The posts collected are the most recent posts from each subreddit at the time PRAW was run. There are 1983 total observations - 983 from r/AskMen and 980 from r/AskWomen. 
 
----
+One feature was generated. The 'subreddit' column is a binary indicator for the subreddit of origin for a post.
 
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+The data dictionary is outlined below:
 
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
+| Feature   | Data Type | Summary                                                                                                                              |
+|-----------|-----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| title     | Object    | Text for title of post                                                                                                               |
+| score     | Integer   | The difference between the number of  upvotes (positive votes) for a post  and the number of downvotes (negative  votes) for a post. |
+| url       | Object    | Url for undividual posts                                                                                                             |
+| comms_num | Integer   | Number of comments on a post                                                                                                         |
+| created   | Float     | Timestamp for when the post was  created                                                                                             |
+| body      | Object    | Supporting text for the post                                                                                                         |
+| subreddit | Integer   | 0 = r/AskMen; 1 = r/AskWomen   
 
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
+The datasets can be found below:
 
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Collection**
-- Was enough data gathered to generate a significant result?
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
-
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** Bayes and one other model)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
+- [Combined data](./data/AskMen_AskWomen.csv)
+- [r/AskMen data](./datasets/askmen.csv)
+- [r/AskWomen data](./datasets/askwomen.csv)
 
 ---
 
-### Why did we choose this project for you?
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
+### Data Cleaning
 
-Part 1 of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL.  There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but often scraping it because they don't have an API (or it's terribly documented).
+There was not a need for much data cleaning. One potentially useful column - 'body' - contained nearly 60% null values. I did experiment with replacing the nulls to use this column in my analysis, but this data did not have an impact on the models. Thus, it was left as is and not used in the analysis. 
 
-Part 2 of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
+---
 
-Part 3 of the project focuses on **Classification Modeling**.  Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.   
+### Exploratory Data Analysis
+
+I began analyzing the data from individual subreddits. I was interested in finding out what the most commonly used words, bigrams, and trigrams were in each set to see if there is an obvious difference in the language that is used in the subreddits. To accomplish this, text was run through Count Vectorizer and English stop words were removed. 
+
+#### Top Words
+
+I created wordclouds for each subreddit to examine the top 25 words. I broke this down by the top words the subreddits had in common and words that were unique to each.
+
+> Top words in common: 
+
+![both wordcloud](./images/both_wordcloud.png) 
+
+> r/AskMen only:
+
+![askmen wordcloud](./images/menonly_wordcloud.png) 
+
+> r/AskWomen only:
+
+![askwomen wordcloud](./images/womenonly_wordcloud.png) 
+
+We see that there is a lot of overlap in the words that each subreddit have in common (nearly 60% of the top 25 words). Interestingly, r/AskMen users make frequent mention of the opposite sex while r/AskWomen users do not. 
+
+#### Top Bigrams
+
+Next, I looked at the most common pairs of words used in the text:
+
+> r/AskMen bigrams:
+
+![askmen bigrams](./images/men_bigrams.png) 
+
+
+> r/AskWomen bigrams
+
+![askwomen wordcloud](./images/women_bigrams.png) 
+
+There are still quite a few pairs of words in common - nearly 40% - but there are a few differences that stand out ("video games," for example, is common in r/AskMen but not in r/AskWomen).
+
+#### Top Trigrams
+
+I then looked at the top triplets of words:
+
+> r/AskMen:
+
+![askmen trigrams](./images/men_trigrams.png) 
+
+> r/AskWomen:
+
+![askwomen trigrams](./images/women_trigrams.png) 
+
+I will use individual words, bigrams, and trigrams in my models to see which n-gram leads to the best models. 
+
+#### Exploring Numeric Variables
+
+I created a heatmap to explore the relationships between our numerical columns with our target:
+
+![numeric heatmap](./images/numeric_corr.png)
+
+There is little to no correlation with our target. Thus, we will use only text data for modeling - specifically our 'title' column. 
+
+---
+
+### Modeling
+
+I used the 'title' column to predict our target, 'subreddit.' The accuracy metric was used for model evaluation.
+
+First, I define the baseline model. Our baseline accuracy is 0.5007 - since we have ideally balanced classes, it is basically a coin flip. Any model built must improve upon this score. 
+
+The models used were logistic regression, multinomial naive Bayes, random forests and extremely random trees. For each model, I used both the count and TF-IDF vectorizers. I initially gridsearched over a number of hyperparameters to try to find the most accurate model, but decided to take a more methodical approach.
+
+I defined a baseline score for each of these eight models by running each model with default hyperparameters: 
+
+| Model               | Vectorizer | Best Cross Val  Accuracy | Training Accuracy | Test Accuracy |
+|---------------------|------------|:------------------------:|-------------------|---------------|
+| Logistic Regression | TF-IDF     | 0.6997                   | 0.8987            | 0.6904        |
+| Extra Trees         | TF-IDF     | 0.6877                   | 0.9905            | 0.6925        |
+| Multinomial NB      | Count      | 0.6868                   | 0.9171            | 0.6762        |
+| Logistic Regression | Count      | 0.6834                   | 0.9552            | 0.7088        |
+| Random Forest       | Count      | 0.6800                   | 0.9905            | 0.6965        |
+| Random Forest       | TF-IDF     | 0.6793                   | 0.9905            | 0.6823        |
+| Multinomial NB      | TF-IDF     | 0.6712                   | 0.9300            | 0.6639        |
+| Extra Trees         | Count      | 0.6692                   | 0.9905            | 0.7006        |
+
+The models are very overfit. I decided to use the models that produced the two best cross val scores using default parameters for further analysis. To complete this, I gridsearched over a number of different hyperparameters for both the vectorizer and the classifier. 
+
+#### Logistic Regression using TF-IDF Vectorizer
+
+The following hyperparameters produced the best model:
+
+> TF-IDF Max Features: 1,000
+>
+> TF-IDF Max DF: .9
+>
+> TF-IDF Min DF: 2
+>
+> TF-IDF N-gram Range: (1,1) - individual words
+>
+> TF-IDF Stop Words: None
+
+Using these hyperparameters, I was able to decrease varaince in the model. The training accuracy was 0.8397 and the test accuracy was 0.7026. The model is still overfit, but I was able to reduce overfitting while improving the results on my testing data.
+
+
+#### Extremely Random Trees with TF-IDF Vectorizer
+
+The following hyperparameters produced the best model:
+
+> TF-IDF Max Features: 500
+>
+> TF-IDF N-gram Range: (1,1) - individual words
+>
+> TF-IDF Stop Words: None
+>
+> Extra Trees Max Depth: 4
+>
+> Extra Trees Estimators: 125
+
+Using these hyperparameters, I was able to decrease varaince in the model. The training accuracy was 0.8016 and the test accuracy was 0.6965. The model is still overfit, but I was able to reduce overfitting better than with any other model while slightly improving the results on my testing data. 
+
+---
+
+### Presentation
+
+The presentation on the study can be found here: [Presentation](./deck.pdf) 
+
+---
+
+### Conclusions and Recommendations
+
+Ultimately, it proved to be a challenge to predict whether a post was from r/AskMen or r/AskWomen. This is likely due to the language and themes used in the subreddits being surprisingly similar. 
+
+To increase model performance, I could aim to use more tools on the data during preprocessing (lemmatizing, stemming, etc.). It would also be worthwhile to identify ways to take context or sentiment into consideration - while there are many words in common amongest the subreddits, I may be able to improve accuracy if I were able to search to the left or right of the words for clues on how the words are really being used (I tried to accomplish this by using bigrams and trigrams in my models to try to accomplish this, but individual words were always the hyperparameter chosen in the best models). Other ways to improve the models would be to collect more data - whether that be more obeservations, or collecting comments. Finally, I would like to experiment with other classifier models to see if they may increase accuracy. 
