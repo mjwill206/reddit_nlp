@@ -4,7 +4,7 @@
 
 ### Problem Statement:
 
-I will be exploring how to create classification models using text data and Natural Language Processing (NLP). I have collected text data on posts from two different Subreddits - [r/AskMen](https://www.reddit.com/r/AskMen/) and [r/AskWomen](https://www.reddit.com/r/AskWomen/). I will use different techniques to prepare the data for modeling, and explore how several classification models peform in an effort to predict from which Subreddit a given post came.
+I will be exploring how to create classification models using text data and Natural Language Processing (NLP). I have collected text data on posts from two different Subreddits - [r/AskMen](https://www.reddit.com/r/AskMen/) and [r/AskWomen](https://www.reddit.com/r/AskWomen/). I will use different techniques to prepare the data for modeling, and explore how several classification models perform in an effort to predict from which Subreddit a given post came.
 
 ---
 
